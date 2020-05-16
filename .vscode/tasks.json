@@ -1,0 +1,28 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "shell: gcc build active file",
+			"command": "/usr/bin/gcc",
+			"args": [
+				"-g",
+				"${workspaceFolder}/src/*.c",
+				"${workspaceFolder}/src/include/*.c",
+				// "${workspaceFolder}/src/include/my/model/*.c",
+				// "${workspaceFolder}/src/include/lib/*.c",
+				// "${file}",
+				"-o",
+				// "${fileDirname}/${fileBasenameNoExtension}"
+				"${workspaceFolder}/target/main.o"
+			],
+			"options": {
+				"cwd": "/usr/bin"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build"
+		}
+	]
+}
