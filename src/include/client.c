@@ -4,67 +4,101 @@
 #include "show.h"
 #include "utils.h"
 #include "operate.h"
-Status client_welcome() {
+#include <string.h>
+Status client_welcome(int *a) {
     show_welcome();
-    int a;
-    int status = putInt(&a,"请输入你需要选择的功能:");
-    while (!status || !(a>0&&a<6)) {
-         putInt(&a,"你的输入有误，请重写输入:");
-    }
-    switch (a) {
-        case 1:
-            client_user_login();
-            break;
-        case 2:
-            client_admin_login();
-            break;
-        case 3:
-            client_registered();
-            break;
-        case 4:
-            client_about_author();
-            break;
-        case 5:
-            client_exit();
-            break;
+    int status = putInt(a,"请输入你需要选择的功能:");
+    while (!status || !(*a>0&&*a<6)) {
+         putInt(a,"你的输入有误，请重写输入:");
     }
     return OK;
 }
 
-Status client_user_login(){
-    return OK;
-}
-Status client_admin_login(){
-    return OK;
-}
-Status client_registered(){
-    fflush(stdin);
-    char username[200];
-    char password[20];
-    char schoolId[10];
-    putString(username,"请输入你的用户名:");
-    // TODO 校验username是不是重复
-    putString(schoolId,"请输入你的学号:");
+Status client_user_login(char **session_login_Id){
+    show_login();
+    char schoolId[100];
+    char password[200];
+    putString(schoolId,"请输入你的学号或输入0退出:");
+    // 0 -> 存在 即当 学号 > 6 和 学号 已经注册时退出登录
+    while (strlen(schoolId) < 6 || operate_comfirm_schoolId_unique(schoolId)) {
+        if (equalsString(schoolId, "0")) {
+            return NO;
+        }
+        if (equalsString(schoolId, "1")) {
+            return -1;
+        }
+        
+        if (strlen(schoolId) < 6) {    
+            putString(schoolId,"学号至少6位,请重新输入,输入0回退到上一菜单:"); 
+            continue;
+        }
+        putString(schoolId,"此学号未注册,请重新输入,输入1进入注册页面,输入0回退到上一菜单:");
+    }
     putString(password,"请输入你的密码:");
-    //这里需要做确认
+    if (operate_comfirm_login(schoolId,password)) {
+        *session_login_Id = schoolId;
+        return OK;
+    }
+    printf("密码错误");
+    return -2;
+}
+Status client_registered(char **session_login_Id){
+    show_register();
+    int type = 2;
+    char username[200];
+    char password[200];
+    char schoolId[100];
+    char adminPwd[100];
+    // TODO 校验schoolId是不是重复,规定学号至少6位
+    putString(schoolId,"请输入你的学号或输入0退出:");
+    while (strlen(schoolId) < 6 || !operate_comfirm_schoolId_unique(schoolId)) {
+        if (equalsString(schoolId, "0")) {
+            return NO;
+        }
+        if (strlen(schoolId) < 6) {    
+            putString(schoolId,"学号至少6位,请重新输入,输入0回退到上一菜单:"); 
+            continue;
+        }
+        putString(schoolId,"此学号已注册,请重新输入,输入0回退到上一菜单:");
+    }
+    
+    putString(username,"请输入你的姓名:");
+    putString(password,"请输入你的密码:");
+    
+    //确认是否注册为管理员
+    putString(adminPwd,"是否注册为管理员,是请输入密码否请输入0:");
+    //管理员登录密码为10086
+    while (!equalsString(adminPwd, "10086")) {
+        if (equalsString(adminPwd, "0")) {
+            type = 1;
+            break;
+        }
+        putString(adminPwd,"管理员密码有误,请重新输入,放弃注册成管理员请输入0:");
+    }
+    // 生成结构体
+    User user;
+    user.username = username;
+    user.schoolId = schoolId;
+    user.password = password;
+    user.type = type;
+    //输出user对象的内容
+    toStringUser(user);
+    
+    //这里进行确认
     int status = confirmInput();
     if (!status)
     {
         return NO;
     }
-    User user;
-    user.username = username;
-    user.schoolId = schoolId;
-    user.password = password;
-    user.type = 1;
-    toStringUser(user);
     if (!operate_insert_userinfo(user))
     {
         return NO;
     }
     printf("恭喜你注册成功\n");
+    *session_login_Id = schoolId;
     return OK;
 }
+
 Status client_about_author(){
     return OK;
 }

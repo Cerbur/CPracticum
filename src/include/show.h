@@ -4,4 +4,6 @@
 #ifndef HEADER_Show
 #define HEADER_Show
 void show_welcome();
+void show_login();
+void show_register();
 #endif

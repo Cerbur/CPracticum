@@ -2,6 +2,7 @@
 #include "model.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 Status putInt(int* num,char* msg) {
 
     printf("%s",msg);
@@ -51,9 +52,17 @@ Status confirmInput() {
 }
 
 Status toStringUser(User user) {
-    printf("User { \n");
-    printf("username : %s\n", user.username);
-    printf("password : %s\n", user.password);
-    printf("schoolId : %s\n", user.schoolId);
-    printf("type: %d }\n" ,user.type);
+    printf("学号 : %s\n", user.schoolId);
+    printf("密码 : %s\n", user.password);
+    printf("姓名 : %s\n", user.username);
+    printf("账户身份 : "); 
+    printf(user.type==1?"普通用户\n":"管理员\n");
+}
+
+Status equalsString(char* string1,char* string2){
+    if (strcmp(string1,string2) == 0)
+    {
+        return OK;
+    }
+    return NO;
 }

@@ -22,6 +22,9 @@ typedef struct LostNode
     struct LostNode* next;
 } LostNode;
 
+/**
+ * 用户信息的实体
+ */
 typedef struct User
 {
     String username; //username

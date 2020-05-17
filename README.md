@@ -1,6 +1,13 @@
 # 2020年C语言课程设计
 学生失物招领管理系统
 
+## 数据表设计
+    userinfo
+        |- schoolId
+        |- password
+        |- username
+        |- type
+
 ## 页面设计
 1. 欢迎页面
 2. 功能选择页面
