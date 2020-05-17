@@ -6,4 +6,5 @@
 void show_welcome();
 void show_login();
 void show_register();
+void show_page_user(char* schoolId,int flag);
 #endif

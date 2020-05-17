@@ -42,4 +42,9 @@ Status toStringUser(User user);
  * 比较两个字符串是否相等
  */
 Status equalsString(char* string1,char* string2);
+
+/**
+ * 通用功能选择器
+ */
+Status getChoice(int *res,int min,int max);
 #endif

@@ -27,4 +27,6 @@ Status client_about_author();
  * 退出系统的客户端
  */
 Status client_exit();
+
+Status client_user_page(char *session_login_Id,int *choice);
 #endif

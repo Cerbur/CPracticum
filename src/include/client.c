@@ -7,10 +7,7 @@
 #include <string.h>
 Status client_welcome(int *a) {
     show_welcome();
-    int status = putInt(a,"请输入你需要选择的功能:");
-    while (!status || !(*a>0&&*a<6)) {
-         putInt(a,"你的输入有误，请重写输入:");
-    }
+    getChoice(a,1,5);
     return OK;
 }
 
@@ -42,6 +39,7 @@ Status client_user_login(char **session_login_Id){
     printf("密码错误");
     return -2;
 }
+
 Status client_registered(char **session_login_Id){
     show_register();
     int type = 2;
@@ -102,6 +100,13 @@ Status client_registered(char **session_login_Id){
 Status client_about_author(){
     return OK;
 }
+
 Status client_exit(){
+    return OK;
+}
+
+Status client_user_page(char *session_login_Id,int *choice) {
+    show_page_user(session_login_Id,1);
+    getChoice(choice,1,6);
     return OK;
 }

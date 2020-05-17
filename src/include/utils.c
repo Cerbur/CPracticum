@@ -66,3 +66,11 @@ Status equalsString(char* string1,char* string2){
     }
     return NO;
 }
+
+Status getChoice(int *res,int min,int max) {
+    int status = putInt(res,"请输入你需要选择的功能:");
+    while (!status || !(*res>=min&&*res<=max)) {
+        status = putInt(res,"你的输入有误，请重写输入:");
+    }
+    return OK;
+}

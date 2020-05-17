@@ -3,8 +3,8 @@
 /**
  * 登录态规范 0->未登录 1已登录
  */
-char *session_login_schoolId;   //一个全局指针,做用户登录态保持
-int stack = 0;  //表示当前页面所在的操作层
+char *session_login_schoolId = "3118007450";   //一个全局指针,做用户登录态保持
+int stack = 1;  //表示当前页面所在的操作层
 int main(int argc, char const *argv[])
 {
     // TODO 这里写基础逻辑
@@ -12,11 +12,11 @@ int main(int argc, char const *argv[])
     {
         switch (stack)
         {
-            int a;
+            int choice;
             int status;
             case 0:
-                client_welcome(&a);
-                switch (a) {
+                client_welcome(&choice);
+                switch (choice) {
                 case 1:
                     status = -2;
                     while (status == -2) {
@@ -27,6 +27,7 @@ int main(int argc, char const *argv[])
                     }
                     if (status == 1) {
                         stack = 1;
+                        printf("学号:%s登录成功",session_login_schoolId);
                         break;
                     }
                 case 2:
@@ -45,7 +46,7 @@ int main(int argc, char const *argv[])
                 break;
             case 1:
                 stack = 0;
-                printf("学号:%s登录成功",session_login_schoolId);
+                client_user_page(session_login_schoolId,&choice);
                 // printf("登录成功");
                 break;
         }
