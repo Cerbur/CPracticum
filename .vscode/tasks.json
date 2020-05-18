@@ -12,6 +12,7 @@
 				// "${workspaceFolder}/src/include/my/model/*.c",
 				// "${workspaceFolder}/src/include/lib/*.c",
 				// "${file}",
+				"-static",
 				"-o",
 				// "${fileDirname}/${fileBasenameNoExtension}"
 				"${workspaceFolder}/target/main.o"
