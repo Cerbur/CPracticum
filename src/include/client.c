@@ -5,13 +5,21 @@
 #include "utils.h"
 #include "operate.h"
 #include <string.h>
+#include <stdlib.h>
+#include <time.h>
+
+Status client_file_init() {
+    operate_file_init();
+    return OK;
+}
+
 Status client_welcome(int *a) {
     show_welcome();
     getChoice(a,1,5);
     return OK;
 }
 
-Status client_user_login(char **session_login_Id){
+Status client_user_login(char *session_login_Id){
     show_login();
     char schoolId[100];
     char password[200];
@@ -33,14 +41,15 @@ Status client_user_login(char **session_login_Id){
     }
     putString(password,"请输入你的密码:");
     if (operate_comfirm_login(schoolId,password)) {
-        *session_login_Id = schoolId;
+        //字符串赋值不能用等于
+        strcpy(session_login_Id,schoolId);
         return OK;
     }
     printf("密码错误");
     return -2;
 }
 
-Status client_registered(char **session_login_Id){
+Status client_registered(char *session_login_Id){
     show_register();
     int type = 2;
     char username[200];
@@ -93,7 +102,8 @@ Status client_registered(char **session_login_Id){
         return NO;
     }
     printf("恭喜你注册成功\n");
-    *session_login_Id = schoolId;
+    //字符串赋值不能用等于
+    strcpy(session_login_Id,schoolId);
     return OK;
 }
 
@@ -106,7 +116,61 @@ Status client_exit(){
 }
 
 Status client_user_page(char *session_login_Id,int *choice) {
-    show_page_user(session_login_Id,1);
+    //TODO 获取这个人的权限等级    
+    show_page_user(session_login_Id,operate_get_user_grade(session_login_Id));
     getChoice(choice,1,6);
+    return OK;
+}
+
+Status client_post_lost_property(char *session_login_Id) {
+    static char *card_name = "校园卡";
+
+    show_post_lost_property(session_login_Id);
+    char name[200]; //失物的名称 如果是校园卡/一卡通输入1 不是校园卡输入名称
+    char description[1000]; //失物的描述
+    char contact_details[200]; //联系方式
+    char submit_user_schoolId[100]; //提交者的schoolId
+    char submit_user[100]; //提交者的id
+    char submit_time[64];  //提交时间
+    putString(name,"请输入你要提交的失物名称,如果是校园卡请输入1,返回上层输入0:");
+    while (strlen(name) < 3) {
+        if (equalsString(name,"0")) {
+            return NO;
+        }
+        if (equalsString(name,"1")) {
+            break;
+        }
+        putString(name,"请输入的名称太短请重新输入,如果是校园卡请输入1,返回上层输入0:");
+    }
+    if (equalsString(name,"1")) {
+        strcpy(name,card_name);
+        putString(description,"请输入校园卡的学号:");
+    } else {
+        putString(description,"请输入失物的描述:");
+    }
+    putString(contact_details,"请输入你的联系方式:");
+    operate_get_username_by_schoolId(submit_user,session_login_Id);
+    getTime(submit_time);
+
+    LostProperty lp;
+    lp.name = name;
+    lp.description = description;
+    lp.contact_details = contact_details;
+    lp.submit_user_schoolId = session_login_Id;
+    lp.submit_user = submit_user;
+    lp.submit_time = submit_time;
+    toStringLostProperty(lp);
+    //这里进行确认
+    int status = confirmInput();
+    if (!status)
+    {
+        return NO;
+    }
+    if (!operate_insert_lostinfo(lp)) {
+        return NO;
+    }
+    printf("你成功提交了信息到失物墙");
+    // printf("client_post_lost_property: name-%s\n",name);
+    // printf("client_post_lost_property:%s\n",submit_time);
     return OK;
 }
