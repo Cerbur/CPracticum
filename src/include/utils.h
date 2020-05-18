@@ -38,6 +38,8 @@ Status confirmInput();
  */
 Status toStringUser(User user);
 
+Status toStringLostProperty(LostProperty lp);
+
 /**
  * 比较两个字符串是否相等
  */
@@ -47,4 +49,11 @@ Status equalsString(char* string1,char* string2);
  * 通用功能选择器
  */
 Status getChoice(int *res,int min,int max);
+
+/**
+ * 获取当前时间
+ */
+Status getTime(char *time_input);
+
+char* itoa(int num,char* str,int radix);
 #endif
