@@ -8,10 +8,13 @@
  */
 typedef struct LostProperty
 {
-    String name; //失物的名称
-    String num; //失主的手机号/联系方式
+    String name; //失物的名称 如果是校园卡/一卡通输入1 不是校园卡输入名称
     String description; //失物的描述
-    String submitTime; //提交的时间
+    String contact_details; //联系方式
+    String submit_user_schoolId; //提交者的schoolId
+    String submit_user; //提交者的username
+    String submit_time; //提交的时间
+    int status; //状态 1-已经找回，0未领取
 } LostProperty;
 /**
  * 失物实体类的单向链表
