@@ -25,4 +25,19 @@ Status operate_comfirm_schoolId_unique(char *schoolId);
  */
 Status operate_comfirm_login(char *schoolId,char *password);
 
+/**
+ * 通过学号获取用户的权限等级 user->1 admin->2
+ */
+Status operate_get_user_grade(char *schoolId);
+
+/**
+ * 通过学号获取用户的username
+ */ 
+Status operate_get_username_by_schoolId(char *username,char *schoolId);
+
+/**
+ * 插入一条失物信息
+ */
+Status operate_insert_lostinfo(LostProperty lp);
+
 #endif
