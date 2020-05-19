@@ -38,6 +38,11 @@ Status confirmInput();
  */
 Status toStringUser(User user);
 
+/**
+ * 按规定格式输出LostProperty的所有数据
+ * @param user实体类
+ * @return OK NO
+ */
 Status toStringLostProperty(LostProperty lp);
 
 /**
