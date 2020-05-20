@@ -49,6 +49,13 @@ Status client_user_login(char *session_login_Id){
     return -2;
 }
 
+Status client_user_exit(char *session_login_Id) {
+    strcpy(session_login_Id,"");
+    printf("退出成功");
+    return OK;
+}
+
+
 Status client_registered(char *session_login_Id){
     show_register();
     int type = 2;
@@ -71,7 +78,9 @@ Status client_registered(char *session_login_Id){
     
     putString(username,"请输入你的姓名:");
     putString(password,"请输入你的密码:");
-    
+     while (strlen(password) < 6 ) {
+        putString(password,"密码至少有6位请重新输入:");
+     }
     //确认是否注册为管理员
     putString(adminPwd,"是否注册为管理员,是请输入密码否请输入0:");
     //管理员登录密码为10086

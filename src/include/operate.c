@@ -92,7 +92,7 @@ Status operate_get_username_by_schoolId(char *username,char *schoolId) {
         fscanf(file_userinfo,"%s %s %s %d\n",tmpId,tmp1,username_tmp,&tmp3);
         // printf("%s\n",tmpId);
         if (equalsString(schoolId,tmpId)) {
-            stpcpy(username,username_tmp);
+            strcpy(username,username_tmp);
             break;
         }        
     }

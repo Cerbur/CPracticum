@@ -1,9 +1,11 @@
+#include <windows.h>
 #include "./include/client.h"
 #include "./include/utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#define clear "clear"
+// #define clear "clear"
+#define clear "cls"
 /**
  * 登录态规范 0->未登录 1已登录
  */
@@ -65,6 +67,12 @@ int main(int argc, char const *argv[])
                 case 3:
                     system(clear);
                     client_post_lost_property(session_login_schoolId);
+                    break;
+                case 6:
+                    system(clear);
+                    client_user_exit(session_login_schoolId);
+                    stack = 0;
+                    Sleep(1000);
                     break;
             }
         }

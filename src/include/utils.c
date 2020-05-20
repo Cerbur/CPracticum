@@ -44,7 +44,7 @@ Status putString(char* string,char* msg){
 }
 Status confirmInput() {
     char confirm;
-    putChar(&confirm,"你确认你的输入吗? Y/N :");
+    putChar(&confirm,"你确认你的输入吗? Y[是]/N[否] :");
     if (confirm == 'Y'|| confirm == 'y')
     {
         return OK;
