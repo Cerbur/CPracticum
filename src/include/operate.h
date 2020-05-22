@@ -36,8 +36,14 @@ Status operate_get_user_grade(char *schoolId);
 Status operate_get_username_by_schoolId(char *username,char *schoolId);
 
 /**
+ * 获取lostinfo表中的lid最大值
+ */
+Status operate_get_lostinfo_maxlid(int *lid);
+
+/**
  * 插入一条失物信息
  */
 Status operate_insert_lostinfo(LostProperty lp);
+
 
 #endif

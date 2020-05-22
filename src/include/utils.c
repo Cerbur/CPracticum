@@ -106,7 +106,7 @@ Status getTime(char *time_input) {
     char hour[3];
     char min[3];
     sprintf(year,"%d",1900 + target_time->tm_year);
-    sprintf(month,"%d",target_time->tm_mon);
+    sprintf(month,"%d",target_time->tm_mon+1);
     sprintf(day,"%d",target_time->tm_mday);
     sprintf(hour,"%d",target_time->tm_hour);
     sprintf(min,"%d",target_time->tm_min);

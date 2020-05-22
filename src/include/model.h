@@ -8,6 +8,7 @@
  */
 typedef struct LostProperty
 {
+    int lid;    //主键唯一标识符
     String name; //失物的名称 如果是校园卡/一卡通输入1 不是校园卡输入名称
     String description; //失物的描述
     String contact_details; //联系方式

@@ -160,8 +160,10 @@ Status client_post_lost_property(char *session_login_Id) {
     putString(contact_details,"请输入你的联系方式:");
     operate_get_username_by_schoolId(submit_user,session_login_Id);
     getTime(submit_time);
-
+    int lid;
+    operate_get_lostinfo_maxlid(&lid);
     LostProperty lp;
+    lp.lid = lid;
     lp.name = name;
     lp.description = description;
     lp.contact_details = contact_details;

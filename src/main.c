@@ -1,11 +1,12 @@
-#include <windows.h>
+// #include <windows.h>
 #include "./include/client.h"
+#include "./include/operate.h"
 #include "./include/utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-// #define clear "clear"
-#define clear "cls"
+#define clear "clear"
+// #define clear "cls"
 /**
  * 登录态规范 0->未登录 1已登录
  */
@@ -64,6 +65,9 @@ int main(int argc, char const *argv[])
             client_user_page(session_login_schoolId,&choice);
             switch (choice)
             {
+                case 1:
+                    // operate_get_lostinfo_maxlid(&choice);
+                    break;
                 case 3:
                     system(clear);
                     client_post_lost_property(session_login_schoolId);
@@ -72,7 +76,7 @@ int main(int argc, char const *argv[])
                     system(clear);
                     client_user_exit(session_login_schoolId);
                     stack = 0;
-                    Sleep(1000);
+                    // Sleep(1000);
                     break;
             }
         }

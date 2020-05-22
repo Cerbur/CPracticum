@@ -99,12 +99,27 @@ Status operate_get_username_by_schoolId(char *username,char *schoolId) {
     return OK;
 }
 
+Status operate_get_lostinfo_maxlid(int *lid) {
+    FILE *flie_lostinfo;
+    flie_lostinfo = fopen("lostinfo.txt","r");
+    int tmp1 = 0;
+    while(!feof(flie_lostinfo)) {
+        int tmp2;
+        char tmp3[100],tmp4[100],tmp5[100],tmp6[100],tmp7[100],tmp8[100];
+        fscanf(flie_lostinfo,"%d %s %s %s %s %s %s %d\n",&tmp1,tmp3,tmp4,tmp5,tmp6,tmp7,tmp8,&tmp2);
+    }
+    printf("%d",tmp1);
+    *lid = ++tmp1;
+    return OK;
+}
+
+
 Status operate_insert_lostinfo(LostProperty lp){
     lp.status = 0;
     FILE *lostinfo;
     lostinfo = fopen("lostinfo.txt","a");
-    fprintf(lostinfo,"%s %s %s %s %s %s %d\n",
-    lp.name,lp.description,lp.contact_details,
+    fprintf(lostinfo,"%d %s %s %s %s %s %s %d\n",
+    lp.lid,lp.name,lp.description,lp.contact_details,
     lp.submit_user_schoolId,lp.submit_user,lp.submit_time,lp.status);
     fclose(lostinfo);
     return OK;
