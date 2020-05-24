@@ -45,5 +45,6 @@ Status operate_get_lostinfo_maxlid(int *lid);
  */
 Status operate_insert_lostinfo(LostProperty lp);
 
+Status operate_get_lostinfo_all(LostNode *head,char* session_id);
 
 #endif

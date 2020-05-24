@@ -13,8 +13,8 @@
 int main(int argc, char const *argv[])
 {
     client_file_init();
-    int stack = 0;  //表示当前页面所在的操作层
-    char session_login_schoolId[100];// = "3118007450";   //一个全局指针,做用户登录态保持
+    int stack = 1;  //表示当前页面所在的操作层
+    char session_login_schoolId[100] = "3118007450";   //一个全局指针,做用户登录态保持
     // TODO 这里写基础逻辑
     while (1)
     {
@@ -60,13 +60,13 @@ int main(int argc, char const *argv[])
         
         while (stack == 1)
         {   
-            system(clear);
+            // system(clear);
             int choice;
             client_user_page(session_login_schoolId,&choice);
             switch (choice)
             {
                 case 1:
-                    // operate_get_lostinfo_maxlid(&choice);
+                    client_get_lost_all(session_login_schoolId);
                     break;
                 case 3:
                     system(clear);

@@ -1,6 +1,7 @@
 #include "operate.h"
 #include "utils.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 Status operate_file_init() {
@@ -110,17 +111,49 @@ Status operate_get_lostinfo_maxlid(int *lid) {
     }
     printf("%d",tmp1);
     *lid = ++tmp1;
+    fclose(flie_lostinfo);
     return OK;
 }
 
 
 Status operate_insert_lostinfo(LostProperty lp){
     lp.status = 0;
-    FILE *lostinfo;
-    lostinfo = fopen("lostinfo.txt","a");
-    fprintf(lostinfo,"%d %s %s %s %s %s %s %d\n",
+    FILE *flie_lostinfo;
+    flie_lostinfo = fopen("lostinfo.txt","a");
+    fprintf(flie_lostinfo,"%d %s %s %s %s %s %s %d\n",
     lp.lid,lp.name,lp.description,lp.contact_details,
     lp.submit_user_schoolId,lp.submit_user,lp.submit_time,lp.status);
-    fclose(lostinfo);
+    fclose(flie_lostinfo);
+    return OK;
+}
+// int tmp1,tmp2;
+//         char tmp3[200];
+//         char tmp4[200];
+//         char tmp5[200];
+//         char tmp6[200];
+//         char tmp7[200];
+//         char tmp8[200];
+Status operate_get_lostinfo_all(LostNode *head,char* session_id) {
+    LostNode *p = head;
+    FILE *flie_lostinfo;
+    flie_lostinfo = fopen("lostinfo.txt","r");
+    printf("====sid:%s\n",session_id);
+    while(!feof(flie_lostinfo)) {
+        p = (LostNode*)malloc(sizeof(LostNode));
+        p->next = NULL;
+        p->lp.name = (char*)malloc(sizeof(char)*200);
+        p->lp.description = (char*)malloc(sizeof(char)*200);
+        p->lp.contact_details = (char*)malloc(sizeof(char)*200);
+        p->lp.submit_user_schoolId = (char*)malloc(sizeof(char)*200);
+        p->lp.submit_user = (char*)malloc(sizeof(char)*200);
+        p->lp.submit_time = (char*)malloc(sizeof(char)*200);
+        fscanf(flie_lostinfo,"%d %s %s %s %s %s %s %d\n",
+        &p->lp.lid,p->lp.name,p->lp.description,
+        p->lp.contact_details,p->lp.submit_user_schoolId,
+        p->lp.submit_user,p->lp.submit_time,&p->lp.status);
+        printf("====sid:%s\n",session_id);
+        p = p->next;
+    }
+    fclose(flie_lostinfo);
     return OK;
 }

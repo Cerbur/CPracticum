@@ -185,3 +185,18 @@ Status client_post_lost_property(char *session_login_Id) {
     // printf("client_post_lost_property:%s\n",submit_time);
     return OK;
 }
+
+Status client_get_lost_all(char *session_login_Id) {
+    printf("====%s====",session_login_Id);
+    LostNode head,*p;
+    &head == NULL;
+    operate_get_lostinfo_all(&head,session_login_Id);
+    p = &head;
+    printf("%s,%s",head.lp.name,head.lp.description);
+
+    // while (p!=NULL) {
+    //     // printf("%s,%s",p->lp.name,p->lp.description);
+    //     p = p->next;
+    // }
+    
+}

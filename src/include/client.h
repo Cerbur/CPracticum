@@ -42,4 +42,6 @@ Status client_user_page(char *session_login_Id,int *choice);
  * 发布失物
  */
 Status client_post_lost_property(char *session_login_Id);
+
+Status client_get_lost_all(char *session_login_Id);
 #endif
