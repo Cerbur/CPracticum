@@ -40,10 +40,12 @@ Status operate_comfirm_schoolId_unique(char *schoolId) {
         fscanf(file_userinfo,"%s %s %s %d\n",tmpId,tmp1,tmp2,&tmp3);
         // printf("%s\n",tmpId);
         if (equalsString(schoolId,tmpId))
-        {
+        {   
+            fclose(file_userinfo);
             return NO;
         }        
     }
+    fclose(file_userinfo);
     return OK;
 }
 
@@ -59,9 +61,11 @@ Status operate_comfirm_login(char *schoolId,char *password) {
         // printf("%s\n",tmpId);
         if (equalsString(schoolId,schoolId_tmp) && equalsString(password,password_tmp))
         {
+            fclose(file_userinfo);
             return OK;
         }        
     }
+    fclose(file_userinfo);
     return NO;
 }
 
@@ -76,9 +80,11 @@ Status operate_get_user_grade(char *schoolId) {
         fscanf(file_userinfo,"%s %s %s %d\n",tmpId,tmp1,tmp2,&grade);
         // printf("%s\n",tmpId);
         if (equalsString(schoolId,tmpId)) {
+            fclose(file_userinfo);
             return grade;
         }        
     }
+    fclose(file_userinfo);
     return NO;
 }
 
@@ -97,6 +103,7 @@ Status operate_get_username_by_schoolId(char *username,char *schoolId) {
             break;
         }        
     }
+    fclose(file_userinfo);
     return OK;
 }
 
@@ -126,34 +133,43 @@ Status operate_insert_lostinfo(LostProperty lp){
     fclose(flie_lostinfo);
     return OK;
 }
-// int tmp1,tmp2;
-//         char tmp3[200];
-//         char tmp4[200];
-//         char tmp5[200];
-//         char tmp6[200];
-//         char tmp7[200];
-//         char tmp8[200];
-Status operate_get_lostinfo_all(LostNode *head,char* session_id) {
+
+Status operate_get_lostinfo_all(LostNode *head) {
     LostNode *p = head;
     FILE *flie_lostinfo;
     flie_lostinfo = fopen("lostinfo.txt","r");
-    printf("====sid:%s\n",session_id);
-    while(!feof(flie_lostinfo)) {
-        p = (LostNode*)malloc(sizeof(LostNode));
-        p->next = NULL;
-        p->lp.name = (char*)malloc(sizeof(char)*200);
-        p->lp.description = (char*)malloc(sizeof(char)*200);
-        p->lp.contact_details = (char*)malloc(sizeof(char)*200);
-        p->lp.submit_user_schoolId = (char*)malloc(sizeof(char)*200);
-        p->lp.submit_user = (char*)malloc(sizeof(char)*200);
-        p->lp.submit_time = (char*)malloc(sizeof(char)*200);
+    while(1) {
         fscanf(flie_lostinfo,"%d %s %s %s %s %s %s %d\n",
         &p->lp.lid,p->lp.name,p->lp.description,
         p->lp.contact_details,p->lp.submit_user_schoolId,
         p->lp.submit_user,p->lp.submit_time,&p->lp.status);
-        printf("====sid:%s\n",session_id);
-        p = p->next;
+        if (!feof(flie_lostinfo))
+        {
+            p -> next = new_LostNode();
+            p = p -> next;
+        } else {
+            break;
+        }
+        
     }
     fclose(flie_lostinfo);
     return OK;
+}
+
+Status operate_update_lostinfo_all(LostNode *head) {
+    LostNode *p = head,*q;
+    FILE *flie_lostinfo;
+    //删除并新建文件
+    flie_lostinfo = fopen("lostinfo.txt","w");
+    fclose(flie_lostinfo);
+    flie_lostinfo = fopen("lostinfo.txt","a");
+    while (p != NULL) {
+        fprintf(flie_lostinfo,"%d %s %s %s %s %s %s %d\n",
+        p->lp.lid,p->lp.name,p->lp.description,p->lp.contact_details,
+        p->lp.submit_user_schoolId,p->lp.submit_user,p->lp.submit_time,p->lp.status);
+        q = p;
+        p = p->next;
+        free(q);
+    }
+    fclose(flie_lostinfo);
 }

@@ -23,7 +23,7 @@ typedef struct LostProperty
 typedef struct LostNode
 {
     LostProperty lp;
-    struct LostNode* next;
+    struct LostNode *next;
 } LostNode;
 
 /**

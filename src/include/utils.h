@@ -60,5 +60,5 @@ Status getChoice(int *res,int min,int max);
  */
 Status getTime(char *time_input);
 
-char* itoa(int num,char* str,int radix);
+LostNode * new_LostNode(void);
 #endif

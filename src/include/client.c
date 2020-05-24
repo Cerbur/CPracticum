@@ -186,17 +186,34 @@ Status client_post_lost_property(char *session_login_Id) {
     return OK;
 }
 
-Status client_get_lost_all(char *session_login_Id) {
-    printf("====%s====",session_login_Id);
-    LostNode head,*p;
-    &head == NULL;
-    operate_get_lostinfo_all(&head,session_login_Id);
-    p = &head;
-    printf("%s,%s",head.lp.name,head.lp.description);
+Status client_get_lost_all() {
+    //创建一个用来存所有lostinfo的链表头
+    LostNode *head = new_LostNode();
+    //传入链表头，获得完整信息
+    operate_get_lostinfo_all(head);
 
-    // while (p!=NULL) {
-    //     // printf("%s,%s",p->lp.name,p->lp.description);
-    //     p = p->next;
-    // }
-    
+    //这是链表的遍历方式
+    LostNode *p = head;
+    while (p != NULL) {
+        
+        //修改信息，各位仅需要再这里做if判断即可
+        strcpy(p->lp.name,"校园卡");
+        
+        p = p->next;
+    }
+
+    //这也是链表的遍历方式
+    p = head;
+    while (p != NULL) {
+        //输出修改后的结果
+        printf("%3d %s %s\n",p->lp.lid,p->lp.name,p->lp.description);
+        // strcpy(p->lp.name,"一卡通");
+        p = p->next;
+    }
+
+    //将修改后的结果插入到lostinfo中
+    operate_update_lostinfo_all(head);
+    free(head);
+    head = NULL;
+    printf("%p",head);
 }

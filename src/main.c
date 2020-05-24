@@ -66,7 +66,7 @@ int main(int argc, char const *argv[])
             switch (choice)
             {
                 case 1:
-                    client_get_lost_all(session_login_schoolId);
+                    client_get_lost_all();
                     break;
                 case 3:
                     system(clear);

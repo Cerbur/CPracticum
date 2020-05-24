@@ -43,5 +43,5 @@ Status client_user_page(char *session_login_Id,int *choice);
  */
 Status client_post_lost_property(char *session_login_Id);
 
-Status client_get_lost_all(char *session_login_Id);
+Status client_get_lost_all();
 #endif
