@@ -49,5 +49,5 @@ Status operate_get_lostinfo_all(LostNode *head);
 
 Status operate_update_lostinfo_all(LostNode *head);
 
-
+Status operate_update_lostinfo_byId_status_to_1(int lid);
 #endif

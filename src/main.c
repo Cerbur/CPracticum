@@ -66,7 +66,8 @@ int main(int argc, char const *argv[])
             switch (choice)
             {
                 case 1:
-                    client_get_lost_all();
+                    // client_get_lost_all();
+                    operate_update_lostinfo_byId_status_to_1(2);
                     break;
                 case 3:
                     system(clear);

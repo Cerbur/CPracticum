@@ -170,6 +170,25 @@ Status operate_update_lostinfo_all(LostNode *head) {
         q = p;
         p = p->next;
         free(q);
+        q = NULL;
     }
     fclose(flie_lostinfo);
+}
+
+Status operate_update_lostinfo_byId_status_to_1(int lid) {
+    //创建一个用来存所有lostinfo的链表头
+    LostNode *head = new_LostNode();
+    //传入链表头，获得完整信息
+    operate_get_lostinfo_all(head);
+    //这是链表的遍历方式
+    LostNode *p = head;
+    while (p != NULL) {
+        if (lid == p->lp.lid) {
+            p->lp.status = 1;
+            break;
+        }
+        p = p->next;
+    }
+    operate_update_lostinfo_all(head);
+    return OK;
 }
