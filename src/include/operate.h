@@ -44,10 +44,23 @@ Status operate_get_lostinfo_maxlid(int *lid);
  * 插入一条失物信息
  */
 Status operate_insert_lostinfo(LostProperty lp);
+/**
+ * 获取findinfo表中的fid最大值
+ */
+Status operate_get_lostinfo_maxfid(int *fid);
+
+/**
+ * 插入一条寻物信息
+ */
+Status operate_insert_findinfo(FindProperty fp);
 
 Status operate_get_lostinfo_all(LostNode *head);
 
 Status operate_update_lostinfo_all(LostNode *head);
 
 Status operate_update_lostinfo_byId_status_to_1(int lid);
+
+Status operate_insert_receiverinfo_lost(char *login_schoolId,int lid);
+
+Status operate_get_lostinfo_by_keyword(LostNode *head,char *keyword);
 #endif

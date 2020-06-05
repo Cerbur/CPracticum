@@ -18,6 +18,18 @@ Status operate_file_init() {
         lostinfo = fopen("lostinfo.txt","w");
         fclose(lostinfo);
     }
+    FILE *findinfo;
+    if ((findinfo = fopen("findinfo.txt","r"))==NULL)
+    {
+        findinfo = fopen("findinfo.txt","w");
+        fclose(findinfo);
+    }
+    FILE *receiveinfo;
+    if ((receiveinfo = fopen("receiveinfo.txt.txt","r"))==NULL)
+    {
+        receiveinfo = fopen("receiveinfo.txt","w");
+        fclose(receiveinfo);
+    }
     return OK;   
 }
 
@@ -134,6 +146,33 @@ Status operate_insert_lostinfo(LostProperty lp){
     return OK;
 }
 
+Status operate_get_lostinfo_maxfid(int *fid) {
+    FILE *flie_findinfo;
+    flie_findinfo = fopen("findinfo.txt","r");
+    int tmp1 = 0;
+    while(!feof(flie_findinfo)) {
+        int tmp2;
+        char tmp3[100],tmp4[100],tmp5[100],tmp6[100],tmp7[100],tmp8[100];
+        fscanf(flie_findinfo,"%d %s %s %s %s %s %s %d\n",&tmp1,tmp3,tmp4,tmp5,tmp6,tmp7,tmp8,&tmp2);
+    }
+    printf("%d",tmp1);
+    *fid = ++tmp1;
+    fclose(flie_findinfo);
+    return OK;
+}
+
+Status operate_insert_findinfo(FindProperty fp) {
+    fp.status = 0;
+    FILE *flie_findinfo;
+    flie_findinfo = fopen("findinfo.txt","a");
+    fprintf(flie_findinfo,"%d %s %s %s %s %s %s %d\n",
+    fp.fid,fp.name,fp.description,fp.contact_details,
+    fp.submit_user_schoolId,fp.submit_user,fp.submit_time,fp.status);
+    fclose(flie_findinfo);
+    return OK;
+}
+
+
 Status operate_get_lostinfo_all(LostNode *head) {
     LostNode *p = head;
     FILE *flie_lostinfo;
@@ -156,6 +195,15 @@ Status operate_get_lostinfo_all(LostNode *head) {
     return OK;
 }
 
+Status operate_insert_receiverinfo_lost(char *login_schoolId,int lid) {
+    FILE *fp;
+    fp=fopen("receiveinfo.txt","a");
+    char*time;
+    getTime(time);
+    fprintf(fp,"1 %d %s %s\n",lid,login_schoolId,time);
+    fclose(fp); 
+}
+
 Status operate_update_lostinfo_all(LostNode *head) {
     LostNode *p = head,*q;
     FILE *flie_lostinfo;
@@ -174,21 +222,54 @@ Status operate_update_lostinfo_all(LostNode *head) {
     }
     fclose(flie_lostinfo);
 }
-
+//传入lid将状态改为1，并写入文件//lid是失物信息的唯一标识 
 Status operate_update_lostinfo_byId_status_to_1(int lid) {
     //创建一个用来存所有lostinfo的链表头
-    LostNode *head = new_LostNode();
+    LostNode *head = new_LostNode();//该函数得到一个链表头 
     //传入链表头，获得完整信息
-    operate_get_lostinfo_all(head);
+    operate_get_lostinfo_all(head);//将文件中的数据读入链表 
     //这是链表的遍历方式
     LostNode *p = head;
-    while (p != NULL) {
-        if (lid == p->lp.lid) {
-            p->lp.status = 1;
+    while (p != NULL) 
+	{
+        if (lid == p->lp.lid) 
+		{
+            p->lp.status = 1;//更改对应lid的状态为1 
             break;
         }
-        p = p->next;
+        p = p->next;//遍历完一个则p指向下一个结构体 
     }
-    operate_update_lostinfo_all(head);
+    operate_update_lostinfo_all(head);// 用fprintf函数把修改后的数据全部重新写入文件 
     return OK;
+}
+Status operate_get_lostinfo_by_keyword(LostNode *head,char *keyword) {
+    LostNode *p = head;
+    FILE *flie_lostinfo;
+    flie_lostinfo = fopen("lostinfo.txt","r");
+    while(1) {
+        fscanf(flie_lostinfo,"%d %s %s %s %s %s %s %d\n",
+        &p->lp.lid,p->lp.name,p->lp.description,
+        p->lp.contact_details,p->lp.submit_user_schoolId,
+        p->lp.submit_user,p->lp.submit_time,&p->lp.status);
+        if (!feof(flie_lostinfo))
+        {
+            p -> next = new_LostNode();
+            p = p -> next;
+        } else {
+            break;
+        }
+        
+    }
+    fclose(flie_lostinfo);
+    return OK;
+}
+
+Status freeLostNode(LostNode *head) {
+    LostNode *p = head,*q;
+    while (p != NULL) {
+        q = p;
+        p = p->next;
+        free(q);
+        q = NULL;
+    }
 }

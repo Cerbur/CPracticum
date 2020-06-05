@@ -40,11 +40,17 @@ Status toStringUser(User user);
 
 /**
  * 按规定格式输出LostProperty的所有数据
- * @param user实体类
+ * @param LostProperty实体类
  * @return OK NO
  */
 Status toStringLostProperty(LostProperty lp);
 
+/**
+ * 按规定格式输出FindProperty的所有数据
+ * @param FindProperty实体类
+ * @return OK NO
+ */
+void toStringFindProperty(FindProperty fp);
 /**
  * 比较两个字符串是否相等
  */
@@ -60,5 +66,11 @@ Status getChoice(int *res,int min,int max);
  */
 Status getTime(char *time_input);
 
+/**
+ * 创建一个Lostinfo的链表
+ */
 LostNode * new_LostNode(void);
+Status freeLostNode(LostNode *head);
+void Next(char*T,int *next);
+int KMP(char*S,char*T);
 #endif

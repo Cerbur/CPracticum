@@ -62,6 +62,7 @@ Status toStringUser(User user) {
     printf("\n");
 }
 
+
 Status toStringLostProperty(LostProperty lp){
     printf("\n");
     if (equalsString(lp.name,"校园卡")) {
@@ -74,6 +75,21 @@ Status toStringLostProperty(LostProperty lp){
     printf("你的用户名 : %s\n", lp.submit_user);
     printf("你的学号 : %s\n", lp.submit_user_schoolId);
     printf("提交时间 : %s\n", lp.submit_time);
+    printf("\n");
+}
+
+void toStringFindProperty(FindProperty fp) {
+    printf("\n");
+    if (equalsString(fp.name,"校园卡")) {
+        printf("失物的名词:校园卡-%s\n",fp.description);
+    } else {
+        printf("失物的名称 : %s\n", fp.name);
+        printf("失物的描述 : %s\n", fp.description);
+    }
+    printf("联系方式 : %s\n", fp.contact_details);
+    printf("你的用户名 : %s\n", fp.submit_user);
+    printf("你的学号 : %s\n", fp.submit_user_schoolId);
+    printf("提交时间 : %s\n", fp.submit_time);
     printf("\n");
 }
 
@@ -141,4 +157,42 @@ LostNode *new_LostNode(void){
     p->lp.submit_user = (char*)malloc(sizeof(char)*200);
     p->lp.submit_time = (char*)malloc(sizeof(char)*200);
     return p;
+}
+
+//NEXT数组 
+void Next(char*T,int *next){
+    int i=1;
+    next[1]=0;
+    int j=0;
+    while (i<strlen(T)) {
+        if (j==0||T[i-1]==T[j-1]) {
+            i++;
+            j++;
+            next[i]=j;
+        }else{
+            j=next[j];
+        }
+    }
+}
+
+//kmp算法  找到返回第一个字符的位置，匹配不到则返回-1 
+int KMP(char*S,char*T){
+    int next[10];
+    Next(T,next);//根据模式串T,初始化next数组
+    int i=1;
+    int j=1;
+    while (i<=strlen(S)&&j<=strlen(T)) {
+        //j==0:代表模式串的第一个字符就和当前测试的字符不相等；S[i-1]==T[j-1],如果对应位置字符相等，两种情况下，指向当前测试的两个指针下标i和j都向后移
+        if (j==0 || S[i-1]==T[j-1]) {
+            i++;
+            j++;
+        }
+        else{
+            j=next[j];//如果测试的两个字符不相等，i不动，j变为当前测试字符串的next值
+        }
+    }
+    if (j>strlen(T)) {//如果条件为真，说明匹配成功
+        return i-(int)strlen(T);
+    }
+    return -1;
 }

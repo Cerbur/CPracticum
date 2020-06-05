@@ -26,6 +26,20 @@ typedef struct LostNode
     struct LostNode *next;
 } LostNode;
 
+
+typedef struct FindProperty
+{
+    int fid;    //主键唯一标识符
+    String name; //失物的名称 如果是校园卡/一卡通输入1 不是校园卡输入名称
+    String description; //失物的描述
+    String contact_details; //联系方式
+    String submit_user_schoolId; //提交者的schoolId
+    String submit_user; //提交者的username
+    String submit_time; //提交的时间
+    int status; //状态 1-已经找回，0未领取
+} FindProperty;
+
+
 /**
  * 用户信息的实体
  */

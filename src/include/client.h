@@ -28,7 +28,7 @@ Status client_user_exit(char *session_login_Id);
  */
 Status client_registered(char *session_login_Id);
 /**
- * 关于作业页面的客户端
+ * 关于作者页面的客户端
  */
 Status client_about_author();
 /**
@@ -36,12 +36,29 @@ Status client_about_author();
  */
 Status client_exit();
 
+/**
+ * 用户客户端
+ */
 Status client_user_page(char *session_login_Id,int *choice);
 
+
+Status client_lost_wall(char* schoolId,int *choice);
 /**
  * 发布失物
  */
 Status client_post_lost_property(char *session_login_Id);
 
-Status client_get_lost_all();
+/**
+ * 发布寻物
+ */
+Status client_post_find_property(char* session_login_Id);
+/**
+ * 获取所有失物 
+ */
+Status client_get_lost_all(char* schoolId);
+
+/**
+ * 关键词搜索
+ */
+Status client_search_lost_all(char* schoolId);
 #endif
