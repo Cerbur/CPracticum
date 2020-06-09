@@ -13,13 +13,11 @@
 int main(int argc, char const *argv[])
 {
     client_file_init();
-    int stack = 3;  //表示当前页面所在的操作层
-    char session_login_schoolId[100] = "3118007450";   //一个全局指针,做用户登录态保持
+    int stack = 0;  //表示当前页面所在的操作层
+    char session_login_schoolId[100];// = "3118007450";   //一个全局指针,做用户登录态保持
     // TODO 这里写基础逻辑
-    while (1)
-    {
-        while (stack == 0)
-        {   
+    while (1) {
+        while (stack == 0) {   
             system(clear);
             int choice;
             int status;
@@ -57,9 +55,7 @@ int main(int argc, char const *argv[])
                 break;
             }
         }
-        
-        while (stack == 1)
-        {   
+        while (stack == 1) {   
             // system(clear);
             int choice;
             client_user_page(session_login_schoolId,&choice);
@@ -73,6 +69,9 @@ int main(int argc, char const *argv[])
                 case 1:
                     stack = 2;
                     break;
+                case 2:
+                    stack = 3;
+                    break;
                 case 3:
                     system(clear);
                     client_post_lost_property(session_login_schoolId);
@@ -82,23 +81,28 @@ int main(int argc, char const *argv[])
                     system(clear);
                     break;
                 case 5:
-                    stack = 3;
+                    stack = 4;
+                    break;
+                case 6:
+                    client_user_remind_detail(session_login_schoolId);
+                    break;
+                case 7:
+                    stack = 5;
                     break;
             }
         }
-        while (stack == 2)
-        {
+        while (stack == 2) {
             int choice;
             //页面层选择功能
             client_lost_wall(session_login_schoolId,&choice);
             switch (choice) {
             case 1:
                 //关键词搜索
-                client_search_lost_all(session_login_schoolId);
+                client_search_find_all(session_login_schoolId);
                 break;
             case 2:
                 //查看所有
-                client_get_lost_all(session_login_schoolId);
+                client_get_find_all(session_login_schoolId);
                 break;
             case 0:
                 //退出
@@ -106,8 +110,26 @@ int main(int argc, char const *argv[])
                 break;
             }
         }
-        while (stack == 3)
-        {
+        while (stack == 3) {
+            int choice;
+            //页面层选择功能
+            client_find_wall(session_login_schoolId,&choice);
+            switch (choice) {
+            case 1:
+                //关键词搜索
+                client_search_find_all(session_login_schoolId);
+                break;
+            case 2:
+                //查看所有
+                client_get_find_all(session_login_schoolId);
+                break;
+            case 0:
+                //退出
+                stack = 1;
+                break;
+            }
+        }
+        while (stack == 4) {
             int choice;
             //页面层选择功能
             client_user_homepage(session_login_schoolId,&choice);
@@ -122,15 +144,39 @@ int main(int argc, char const *argv[])
             case 3:
                 client_user_update_password(session_login_schoolId);
                 break;
+            case 4:
+                client_user_show_lost(session_login_schoolId);
+                break;
             case 0:
                 //退出
                 stack = 1;
                 break;
             }
         }
-        
+        while (stack == 5) {
+            int choice;
+            //页面层选择功能
+            client_admin_homepage(session_login_schoolId,&choice);
+            switch (choice) {
+                case 0:
+                    //退出
+                    stack = 1;
+                    break;
+                case 1:
+                    client_admin_lost_wall(session_login_schoolId);
+                    break;
+                case 2:
+                    client_admin_find_wall(session_login_schoolId);
+                    break;
+                case 3:
+                    client_admin_receive_wall(session_login_schoolId);
+                    break;
+                case 4:
+                    client_admin_reset_password(session_login_schoolId);
+                    break;
+            }
+        }
     }
-    
     return 0;
 }
 /**

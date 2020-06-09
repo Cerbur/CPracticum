@@ -25,7 +25,7 @@ Status operate_file_init() {
         fclose(findinfo);
     }
     FILE *receiveinfo;
-    if ((receiveinfo = fopen("receiveinfo.txt.txt","r"))==NULL)
+    if ((receiveinfo = fopen("receiveinfo.txt","r"))==NULL)
     {
         receiveinfo = fopen("receiveinfo.txt","w");
         fclose(receiveinfo);
@@ -190,6 +190,26 @@ Status operate_remove_receiveinfo_by_type_id(int type,int id) {
     return OK;
 }
 
+
+Status operate_get_receiveinfo_all(ReceiveNode *head) {
+    ReceiveNode *p = head;
+    FILE *file_receiveinfo;
+    file_receiveinfo = fopen("receiveinfo.txt","r");
+    while(1) {
+        fscanf(file_receiveinfo,"%d %d %s %s\n",&p->r.type,&p->r.lfid,p->r.receive_user_schoolId,p->r.receive_time);
+        if (!feof(file_receiveinfo))
+        {
+            p -> next = new_ReceiveNode();
+            p = p -> next;
+        } else {
+            break;
+        }
+        
+    }
+    fclose(file_receiveinfo);
+    return OK;
+}
+
 Status operate_get_lostinfo_maxlid(int *lid) {
     FILE *flie_lostinfo;
     flie_lostinfo = fopen("lostinfo.txt","r");
@@ -312,6 +332,46 @@ Status operate_update_lostinfo_byId_status_to_1(int lid) {
         p = p->next;//遍历完一个则p指向下一个结构体 
     }
     operate_update_lostinfo_all(head);// 用fprintf函数把修改后的数据全部重新写入文件 
+    return OK;
+}
+
+Status operate_update_lostinfo_byId_status_to_2(int lid) {
+    //创建一个用来存所有lostinfo的链表头
+    LostNode *head = new_LostNode();//该函数得到一个链表头 
+    //传入链表头，获得完整信息
+    operate_get_lostinfo_all(head);//将文件中的数据读入链表 
+    //这是链表的遍历方式
+    LostNode *p = head;
+    while (p != NULL) 
+	{
+        if (lid == p->lp.lid) 
+		{
+            p->lp.status = 2;//更改对应lid的状态为1 
+            break;
+        }
+        p = p->next;//遍历完一个则p指向下一个结构体 
+    }
+    operate_update_lostinfo_all(head);// 用fprintf函数把修改后的数据全部重新写入文件 
+    return OK;
+}
+
+Status operate_update_findinfo_byId_status_to_2(int lid) {
+    //创建一个用来存所有lostinfo的链表头
+    FindNode *head = new_FindNode();//该函数得到一个链表头 
+    //传入链表头，获得完整信息
+    operate_get_findinfo_all(head);//将文件中的数据读入链表 
+    //这是链表的遍历方式
+    FindNode *p = head;
+    while (p != NULL) 
+	{
+        if (lid == p->fp.fid) 
+		{
+            p->fp.status = 2;//更改对应lid的状态为1 
+            break;
+        }
+        p = p->next;//遍历完一个则p指向下一个结构体 
+    }
+    operate_update_findinfo_all(head);// 用fprintf函数把修改后的数据全部重新写入文件 
     return OK;
 }
 

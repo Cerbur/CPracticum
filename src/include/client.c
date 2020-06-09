@@ -129,10 +129,10 @@ Status client_user_page(char *session_login_Id,int *choice) {
     //TODO 获取这个人的权限等级    
     int user_grade = operate_get_user_grade(session_login_Id);
     show_page_user(session_login_Id,user_grade);
-    int max = 5;
+    int max = 6;
     int min = 0;
     if (user_grade == 2) {
-        max = 6;
+        max = 7;
     }
 
     getChoice(choice,min,max);
@@ -253,7 +253,12 @@ Status client_lost_wall(char* schoolId,int *choice) {
     //选择
     getChoice(choice,0,2);
 }
-
+Status client_find_wall(char* schoolId,int *choice) {
+    //打印框框
+    show_get_find_wall(schoolId);
+    //选择
+    getChoice(choice,0,2);
+}
 Status client_search_lost_all(char* schoolId) {
     //创建一个用来存所有lostinfo的链表头
     LostNode *head = new_LostNode();
@@ -403,6 +408,83 @@ Status client_get_lost_all(char* schoolId) {
     return OK;
 }
 
+Status client_get_find_all(char* schoolId) {
+    //创建一个用来存所有findinfo的链表头
+    FindNode *head = new_FindNode();
+    //传入链表头，获得完整信息
+    operate_get_findinfo_all(head);
+    printf("序号 \t\t物品 \t\t描述 \t\t联系方式\n");
+    printf("=====================================\n");
+    //这也是链表的遍历方式
+    int flag = 1;
+    FindNode *p = head;
+    while (p != NULL) {
+        //输出所有结果
+        if (p->fp.status == 0)
+        {
+            printf("%3d \t\t%s \t\t%s \t\t%s\n",flag++,p->fp.name,p->fp.description,p->fp.contact_details);
+        }
+        p = p->next;
+    }
+    flag--;
+    //如果没有对应的数据
+    freeFindNode(head);
+    if (flag == 0)
+    {
+        printf("未找到相关数据回车,返回上层\n");
+        getchar();
+        return NO;
+    }
+    printf("共%d条信息.回车,返回上层",flag);
+    getchar();
+    return OK;
+}
+
+Status client_search_find_all(char* schoolId) {
+//创建一个用来存所有lostinfo的链表头
+    FindNode *head = new_FindNode();
+    //传入链表头，获得完整信息,现在这个head有着所有的完整信息
+    operate_get_findinfo_all(head);
+    //输入关键字
+    char keyword[200];
+	int status=putString(keyword,"请输入关键词,输入0返回上层：");
+    if (equalsString(keyword,"0")) {
+        freeFindNode(head);
+        return NO;
+    }
+
+    //这也是链表的遍历方式
+    int flag = 1;   //用于确认总共有多少输出数据
+    FindNode *p = head;
+    printf("序号 \t\t物品 \t\t描述\n");
+    printf("=====================================\n");
+    while (p != NULL) {
+        //输出所有结果
+        //第一个确定状态为未查询，第二个条件确定在名字和描述中存在关键字
+        if (p->fp.status == 0 &&
+         (KMP(p->fp.name,keyword) != -1 || 
+         KMP(p->fp.description,keyword) != -1)) {
+            //符合要求打印数据,同时flag++
+            printf("%3d \t\t%s \t\t%s \t\t%s\n",flag++,p->fp.name,p->fp.description,p->fp.contact_details);
+        }
+        p = p->next;
+    }
+    //释放head链表的内存防止内存溢出
+    freeFindNode(head);
+    //因为最后一次符合后flag会比真实的数据多1所有-1
+    flag--;
+    //如果没有对应的数据
+    if (flag == 0)
+    {
+        printf("未找到相关数据回车,返回上层\n");
+        //让用户打一个回车
+        getchar();
+        return NO;
+    }
+    printf("共%d条信息.回车,返回上层",flag);
+    getchar();
+    return OK;
+}
 Status client_user_delete_lost_information(char *schoolId) {
     //创建一个用来存所有lostinfo的链表头
     LostNode *head = new_LostNode();
@@ -580,7 +662,7 @@ Status client_user_homepage(char* schoolId,int *choice) {
     //打印框框
     show_user_homepage(schoolId);
     //选择
-    getChoice(choice,0,3);
+    getChoice(choice,0,4);
     return OK;
 }
 
@@ -622,3 +704,294 @@ Status client_user_update_password(char *schoolId) {
     return OK;
 }
 
+Status client_user_show_lost(char *schoolId) {
+    show_user_show_mylost(schoolId);
+    ReceiveNode *p,*head_rec = new_ReceiveNode();
+    LostNode *q,*head_lost = new_LostNode();
+    operate_get_receiveinfo_all(head_rec);
+    operate_get_lostinfo_all(head_lost);
+    p = head_rec;
+    q = head_lost;
+    int flag = 0;
+    while (p != NULL) {
+        if (p->r.type == 1 && equalsString(p->r.receive_user_schoolId,schoolId)) {
+            q = head_lost;
+            while (q != NULL) {
+                if (p->r.lfid == q->lp.lid && q->lp.status == 1) {
+                    printf("失物:%s 失物描述:%s 发布者:%s 发布者联系方式:%s\n",q->lp.name,q->lp.description,q->lp.submit_user,q->lp.contact_details);
+                    flag ++;
+                }
+                q = q->next;
+            }
+        }
+        p = p->next;
+    }
+    freeLostNode(head_lost);
+    freeReceiveNode(head_rec);
+    if (flag == 0) {
+        printf("未找到相关信息,回车返回上层\n");
+    } else {
+        printf("共%d条相关信息,回车返回上层\n",flag);
+    }
+    getchar();
+    return OK;
+}
+
+Status client_admin_homepage(char* schoolId,int *choice) {
+        //打印框框
+    show_admin_homepage(schoolId);
+    //选择
+    getChoice(choice,0,4);
+    return OK;
+}
+
+Status client_admin_lost_wall(char* schoolId) {
+    //创建一个用来存所有lostinfo的链表头
+    LostNode *head = new_LostNode();
+    //传入链表头，获得完整信息
+    operate_get_lostinfo_all(head);
+    printf("序号 \t\t物品 \t\t描述 \t\t\t发布者id \t\t发布者 \t\t发布者联系方式 \t\t状态\n");
+    printf("=====================================\n");
+    //这也是链表的遍历方式
+    int flag = 1;
+    LostNode *p = head;
+    while (p != NULL) {
+        //输出所有结果
+        printf("%3d \t\t%s \t\t%s \t\t\t%s \t\t%s \t\t%s \t\t",
+        flag++,p->lp.name,p->lp.description,p->lp.submit_user_schoolId,p->lp.submit_user
+        ,p->lp.contact_details);
+        if (p->lp.status == 0) {
+                printf("未领取");
+            } else if (p->lp.status == 1) {
+                printf("被领取");
+            } else {
+                printf("管理员不予显示，请修改");
+            }
+            printf("\n");
+        p = p->next;
+    }
+    flag--;
+    //如果没有对应的数据
+    if (flag == 0)
+    {
+        printf("未找到相关数据回车,返回上层\n");
+        freeLostNode(head);
+        getchar();
+        return NO;
+    }
+    int choice;
+    int status = putInt(&choice,"你可以输入状态未领取对应的序号让其不予显示或输入0退出:");
+    while (!status || !(choice>=0&&choice<=flag)) {
+        status = putInt(&choice,"你的输入有误，请重写输入:");
+    }
+    if (choice == 0)
+    {
+        freeLostNode(head);
+        return NO;
+    }
+    printf("你不予显示的序号%d,",choice);
+    status = confirmInput();
+    if (!status)
+    {
+        freeLostNode(head);
+        return NO;
+    }
+    status = 0;
+    p = head;
+    while (p != NULL) {
+        status++;
+        if (status == choice) {
+            break;
+        }
+        p = p->next;
+    }
+    //输出所有结果
+    if (p->lp.status != 0) {
+        printf("这个序号的信息不是未领取状态,修改失败,回车返回上层\n");
+        freeLostNode(head);
+        getchar(); //用来暂停的
+        return NO;
+    }
+    operate_update_lostinfo_byId_status_to_2(p->lp.lid);
+    printf("修改成功,输入回车返回上层\n");
+    getchar(); //用来暂停的
+    return OK;
+}
+
+Status client_admin_find_wall(char* schoolId) {
+     //创建一个用来存所有lostinfo的链表头
+    FindNode *head = new_FindNode();
+    //传入链表头，获得完整信息
+    operate_get_findinfo_all(head);
+    printf("序号 \t\t物品 \t\t描述 \t\t\t发布者id \t\t发布者 \t\t发布者联系方式 \t\t状态\n");
+    printf("=====================================\n");
+    //这也是链表的遍历方式
+    int flag = 1;
+    FindNode *p = head;
+    while (p != NULL) {
+        //输出所有结果
+        printf("%3d \t\t%s \t\t%s \t\t\t%s \t\t%s \t\t%s \t\t",
+        flag++,p->fp.name,p->fp.description,p->fp.submit_user_schoolId,p->fp.submit_user
+        ,p->fp.contact_details);
+        if (p->fp.status == 0) {
+                printf("正常显示");
+            } else {
+                printf("管理员不予显示，请修改");
+            }
+            printf("\n");
+        p = p->next;
+    }
+    flag--;
+    //如果没有对应的数据
+    if (flag == 0)
+    {
+        printf("未找到相关数据回车,返回上层\n");
+        freeFindNode(head);
+        getchar();
+        return NO;
+    }
+    int choice;
+    int status = putInt(&choice,"你可以输入状态正常显示对应的序号让其不予显示或输入0退出:");
+    while (!status || !(choice>=0&&choice<=flag)) {
+        status = putInt(&choice,"你的输入有误，请重写输入:");
+    }
+    if (choice == 0)
+    {
+        freeFindNode(head);
+        return NO;
+    }
+    printf("你不予显示的序号%d,",choice);
+    status = confirmInput();
+    if (!status)
+    {
+        freeFindNode(head);
+        return NO;
+    }
+    status = 0;
+    p = head;
+    while (p != NULL) {
+        status++;
+        if (status == choice) {
+            break;
+        }
+        p = p->next;
+    }
+    //输出所有结果
+    if (p->fp.status != 0) {
+        printf("这个序号的信息不是正常显示状态,修改失败,回车返回上层\n");
+        freeFindNode(head);
+        getchar(); //用来暂停的
+        return NO;
+    }
+    operate_update_findinfo_byId_status_to_2(p->fp.fid);
+    printf("修改成功,输入回车返回上层\n");
+    getchar(); //用来暂停的
+    return OK;
+}
+
+Status client_admin_receive_wall(char* schoolId) {
+    ReceiveNode *p,*head_rec = new_ReceiveNode();
+    LostNode *q,*head_lost = new_LostNode();
+    operate_get_receiveinfo_all(head_rec);
+    operate_get_lostinfo_all(head_lost);
+    p = head_rec;
+    q = head_lost;
+    int flag = 0;
+    while (p != NULL) {
+        if (p->r.type == 1) {
+            q = head_lost;
+            while (q != NULL) {
+                if (p->r.lfid == q->lp.lid && q->lp.status == 1) {
+                    printf("失物:%s 失物描述:%s 发布者id:%s 领取者id:%s 领取时间:%s\n",q->lp.name,q->lp.description,q->lp.submit_user_schoolId,p->r.receive_user_schoolId,p->r.receive_time);
+                    flag ++;
+                }
+                q = q->next;
+            }
+        }
+        p = p->next;
+    }
+    freeLostNode(head_lost);
+    freeReceiveNode(head_rec);
+    if (flag == 0) {
+        printf("未找到相关信息,回车返回上层\n");
+    } else {
+        printf("共%d条相关信息,回车返回上层\n",flag);
+    }
+    getchar();
+    return OK;
+}
+Status client_admin_reset_password(char* schoolId) {
+    char schoolId_change[200];
+    putString(schoolId_change,"请输入你要重置密码的学号,输入0返回上级:");
+    while (1) {
+        if (equalsString(schoolId_change,"0")) {
+            return NO;
+        }
+        if (operate_comfirm_schoolId_unique(schoolId_change) == OK) {
+            putString(schoolId_change,"学号不存在请重新输入,输入0返回上级:");
+        } else {
+            break;
+        }  
+    }
+    if (operate_update_userinfo_user_password(schoolId_change,"123456")){
+        printf("学号:%s修改成功\n",schoolId_change);
+    } else {
+        printf("修改失败出现异常\n");
+        return NO;
+    }
+    printf("输入回车返回上层");
+    getchar();
+    return OK;
+}
+Status client_user_remind_look(char* schoolId) {
+    //创建一个用来存所有lostinfo的链表头
+    LostNode *head = new_LostNode();
+    //传入链表头，获得完整信息
+    operate_get_lostinfo_all(head);
+    LostNode *p = head;
+    while (p != NULL) {
+        if (equalsString(p->lp.name,"校园卡") && equalsString(p->lp.description,schoolId) && p->lp.status == 0) {
+            freeLostNode(head);
+            return OK;
+        }
+        p = p->next;
+    }
+    freeLostNode(head);
+    return NO;
+}
+Status client_user_remind_detail(char* schoolId) {
+    //创建一个用来存所有lostinfo的链表头
+    LostNode *head = new_LostNode();
+    //传入链表头，获得完整信息
+    operate_get_lostinfo_all(head);
+    LostNode *p = head;
+    int flag = 0;
+    while (p != NULL) {
+        if (equalsString(p->lp.name,"校园卡") && equalsString(p->lp.description,schoolId) && p->lp.status == 0) {
+            flag++;
+            break;
+        }
+        p = p->next;
+    }
+    if (flag == 0) {
+        printf("无信息输入回车返回上层\n");
+        freeLostNode(head);
+        getchar(); 
+        return NO;
+    }
+    
+    printf("你要领取校园卡:%s吗?",p->lp.description);
+    int status = confirmInput();
+    if (!status)
+    {
+        freeLostNode(head);
+        return NO;
+    }
+    //输出所有结果
+    printf("失物:%s 失物描述:%s 发布者:%s 发布者联系方式:%s\n",p->lp.name,p->lp.description,p->lp.submit_user,p->lp.contact_details);
+    operate_update_lostinfo_byId_status_to_1(p->lp.lid);
+    operate_insert_receiverinfo_lost(schoolId,p->lp.lid);
+    printf("输入回车返回上层\n");
+    getchar(); //用来暂停的
+    return NO;
+}
