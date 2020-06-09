@@ -13,8 +13,8 @@
 int main(int argc, char const *argv[])
 {
     client_file_init();
-    int stack = 0;  //表示当前页面所在的操作层
-    char session_login_schoolId[100];// = "3118007450";   //一个全局指针,做用户登录态保持
+    int stack = 3;  //表示当前页面所在的操作层
+    char session_login_schoolId[100] = "3118007450";   //一个全局指针,做用户登录态保持
     // TODO 这里写基础逻辑
     while (1)
     {
@@ -81,28 +81,54 @@ int main(int argc, char const *argv[])
                     client_post_find_property(session_login_schoolId);
                     system(clear);
                     break;
-            }
-            while (stack == 2)
-            {
-                int choice;
-                //页面层选择功能
-                client_lost_wall(session_login_schoolId,&choice);
-                switch (choice) {
-                case 1:
-                    //关键词搜索
-                    client_search_lost_all(session_login_schoolId);
+                case 5:
+                    stack = 3;
                     break;
-                case 2:
-                    //查看所有
-                    client_get_lost_all(session_login_schoolId);
-                    break;
-                case 0:
-                    //退出
-                    stack = 1;
-                    break;
-                }
             }
         }
+        while (stack == 2)
+        {
+            int choice;
+            //页面层选择功能
+            client_lost_wall(session_login_schoolId,&choice);
+            switch (choice) {
+            case 1:
+                //关键词搜索
+                client_search_lost_all(session_login_schoolId);
+                break;
+            case 2:
+                //查看所有
+                client_get_lost_all(session_login_schoolId);
+                break;
+            case 0:
+                //退出
+                stack = 1;
+                break;
+            }
+        }
+        while (stack == 3)
+        {
+            int choice;
+            //页面层选择功能
+            client_user_homepage(session_login_schoolId,&choice);
+            switch (choice) {
+            case 1:
+                client_user_delete_lost_information(session_login_schoolId);
+                break;
+            case 2:
+                client_user_delete_find_information(session_login_schoolId);
+                break;
+                //管理员功能可以看operate_update_lostinfo_byId_status_to_1(int lid);这个函数，具体我就不写了，和上面一样
+            case 3:
+                client_user_update_password(session_login_schoolId);
+                break;
+            case 0:
+                //退出
+                stack = 1;
+                break;
+            }
+        }
+        
     }
     
     return 0;

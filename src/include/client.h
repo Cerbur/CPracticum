@@ -61,4 +61,10 @@ Status client_get_lost_all(char* schoolId);
  * 关键词搜索
  */
 Status client_search_lost_all(char* schoolId);
+
+Status client_user_delete_lost_information(char *schoolId);
+Status client_user_delete_find_information(char *schoolId);
+Status client_user_homepage(char* schoolId,int *choice);
+
+Status client_user_update_password(char *schoolId);
 #endif

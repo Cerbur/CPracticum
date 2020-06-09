@@ -131,3 +131,40 @@ void show_get_lost_property(char* schoolId) {
     printf("\t\t┖==================================┙\n");
     printf("\n");
 }
+
+void show_user_homepage(char* schoolId) {
+    printf("\n");
+    printf("\t\t┍==================================┑\n");
+    printf("\t\t┃                                  ┃\n");
+    printf("\t\t┃  * -校园失物招领系统用户页面- *  ┃\n");
+    printf("\t\t┃                                  ┃\n");
+    printf("\t\t┃\t账号:\t%s         ┃\n",schoolId);
+    printf("\t\t┃                                  ┃\n");
+    printf("\t\t┃   [1]   删除失物墙的内容         ┃\n");
+    printf("\t\t┃                                  ┃\n");
+    printf("\t\t┃   [2]   删除寻物墙的内容         ┃\n");
+    printf("\t\t┃                                  ┃\n");
+    printf("\t\t┃   [3]       修改密码             ┃\n");
+    printf("\t\t┃                                  ┃\n");
+    printf("\t\t┃   [0]       返回上级菜单         ┃\n");
+    printf("\t\t┃                                  ┃\n");
+    printf("\t\t┃         version %s        ┃\n",version);
+    printf("\t\t┖==================================┙\n");
+    printf("\n");
+}
+
+void show_user_update_password(char* schoolId) {
+    printf("\n");
+    printf("\t\t┍==================================┑\n");
+    printf("\t\t┃                                  ┃\n");
+    printf("\t\t┃   * - *  校园失物招领系统 * - *  ┃\n");
+    printf("\t\t┃                                  ┃\n");
+    printf("\t\t┃\t账号:\t%s         ┃\n",schoolId);
+    printf("\t\t┃                                  ┃\n");
+    printf("\t\t┃      --     修改密码       --    ┃\n");
+    printf("\t\t┃                                  ┃\n");
+    printf("\t\t┃                                  ┃\n");
+    printf("\t\t┃         version %s        ┃\n",version);
+    printf("\t\t┖==================================┙\n");
+    printf("\n");
+}

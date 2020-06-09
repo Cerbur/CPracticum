@@ -10,4 +10,6 @@ void show_page_user(char* schoolId,int flag);
 void show_post_lost_property(char* schoolId);
 void show_post_find_property(char *schoolId);
 void show_get_lost_property(char* schoolId);
+void show_user_homepage(char* schoolId);
+void show_user_update_password(char* schoolId);
 #endif

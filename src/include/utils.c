@@ -159,6 +159,47 @@ LostNode *new_LostNode(void){
     return p;
 }
 
+FindNode *new_FindNode(void){
+    FindNode *p =  (FindNode*)malloc(sizeof(FindNode));
+    p->next = NULL;
+    p->fp.name = (char*)malloc(sizeof(char)*200);
+    p->fp.description = (char*)malloc(sizeof(char)*200);
+    p->fp.contact_details = (char*)malloc(sizeof(char)*200);
+    p->fp.submit_user_schoolId = (char*)malloc(sizeof(char)*200);
+    p->fp.submit_user = (char*)malloc(sizeof(char)*200);
+    p->fp.submit_time = (char*)malloc(sizeof(char)*200);
+    return p;
+}
+
+UserNode *new_UserNode(void) {
+    UserNode *p =  (UserNode*)malloc(sizeof(UserNode));
+    p->next = NULL;
+    p->user.username = (char*)malloc(sizeof(char)*200);
+    p->user.password = (char*)malloc(sizeof(char)*200);
+    p->user.schoolId = (char*)malloc(sizeof(char)*200);
+    return p;
+}
+
+ReceiveNode *new_ReceiveNode(void) {
+    ReceiveNode *p =  (ReceiveNode*)malloc(sizeof(ReceiveNode));
+    p->next = NULL;
+    p->r.receive_time = (char*)malloc(sizeof(char)*200);
+    p->r.receive_user_schoolId = (char*)malloc(sizeof(char)*200);
+    return p;
+}
+
+Status freeReceiveNode(ReceiveNode *head) {
+    ReceiveNode *p = head,*q;
+    while (p != NULL) {
+        q = p;
+        p = p->next;
+        free(q->r.receive_time);
+        free(q->r.receive_user_schoolId);
+        free(q);
+        q = NULL;
+    }
+}
+
 //NEXT数组 
 void Next(char*T,int *next){
     int i=1;
@@ -195,4 +236,50 @@ int KMP(char*S,char*T){
         return i-(int)strlen(T);
     }
     return -1;
+}
+
+
+Status freeFindNode(FindNode *head) {
+    FindNode *p = head,*q;
+    while (p != NULL) {
+        q = p;
+        p = p->next;
+        free(q->fp.name);
+        free(q->fp.description);
+        free(q->fp.contact_details);
+        free(q->fp.submit_user_schoolId);
+        free(q->fp.submit_user);
+        free(q->fp.submit_time);
+        free(q);
+        q = NULL;
+    }
+}
+
+Status freeLostNode(LostNode *head) {
+    LostNode *p = head,*q;
+    while (p != NULL) {
+        q = p;
+        p = p->next;
+        free(q->lp.name);
+        free(q->lp.description);
+        free(q->lp.contact_details);
+        free(q->lp.submit_user_schoolId);
+        free(q->lp.submit_user);
+        free(q->lp.submit_time);
+        free(q);
+        q = NULL;
+    }
+}
+
+Status freeUserNode(UserNode *head) {
+    UserNode *p = head,*q;
+    while (p != NULL) {
+        q = p;
+        p = p->next;
+        free(q->user.schoolId);
+        free(q->user.password);
+        free(q->user.username);
+        free(q);
+        q = NULL;
+    }
 }

@@ -80,7 +80,7 @@ Status client_registered(char *session_login_Id){
     putString(password,"请输入你的密码:");
      while (strlen(password) < 6 ) {
         putString(password,"密码至少有6位请重新输入:");
-     }
+    }
     //确认是否注册为管理员
     putString(adminPwd,"是否注册为管理员,是请输入密码否请输入0:");
     //管理员登录密码为10086
@@ -402,3 +402,223 @@ Status client_get_lost_all(char* schoolId) {
     getchar(); //用来暂停的
     return OK;
 }
+
+Status client_user_delete_lost_information(char *schoolId) {
+    //创建一个用来存所有lostinfo的链表头
+    LostNode *head = new_LostNode();
+    //传入链表头，获得完整信息
+    operate_get_lostinfo_all(head);
+    printf("序号 \t\t物品 \t\t描述 \t\t状态\n");
+    printf("=====================================\n");
+    //这也是链表的遍历方式
+    int flag = 1;
+    LostNode *p = head;
+    while (p != NULL) {
+        //输出所有结果
+        if (equalsString(schoolId,p->lp.submit_user_schoolId)) {
+            printf("%3d \t\t%s \t\t%s \t\t",flag++,p->lp.name,p->lp.description);
+            if (p->lp.status == 0) {
+                printf("未领取");
+            } else if (p->lp.status == 1) {
+                printf("被领取");
+            } else {
+                printf("管理员不予显示，请修改");
+            }
+            printf("\n");
+        }
+        p = p->next;
+    }
+    flag--;
+    //如果没有对应的数据
+    if (flag == 0)
+    {
+        printf("未找到相关数据回车,返回上层\n");
+        freeLostNode(head);
+        getchar();
+        return NO;
+    } else
+    {
+        printf("共%d条信息\n",flag);
+    }
+    
+    int choice;
+    int status = putInt(&choice,"输入对应数字进行删除或输入0退出:");
+    while (!status || !(choice>=0&&choice<=flag)) {
+        status = putInt(&choice,"你的输入有误，请重写输入:");
+    }
+    if (choice == 0)
+    {
+        freeLostNode(head);
+        return NO;
+    }
+    printf("你要删除序号%d,",choice);
+    status = confirmInput();
+    if (!status)
+    {
+        freeLostNode(head);
+        return NO;
+    }
+    status = 0;
+    p = head;
+    LostNode *q = head;
+    while (p != NULL) {
+        if (equalsString(schoolId,p->lp.submit_user_schoolId)) {
+            status++;
+        }
+        if (status == choice) {
+            break;
+        }
+        q = p;  //记录下p的前一个节点
+        p = p->next;
+    }
+    if (q != p)
+    {
+        q->next = p->next; //删除节点p
+        p->next = NULL; //将p->next制空
+    } else {
+        p = head;
+        head = head->next;
+        p->next = NULL;
+    }
+    operate_remove_receiveinfo_by_type_id(1,p->lp.lid);
+    freeLostNode(p);    //释放节点p;
+    operate_update_lostinfo_all(head);
+    printf("删除成功\n");
+    printf("输入回车返回上层\n");
+    getchar(); //用来暂停的
+    return OK;
+}
+
+
+Status client_user_delete_find_information(char *schoolId) {
+    //创建一个用来存所有lostinfo的链表头
+    FindNode *head = new_FindNode();
+    //传入链表头，获得完整信息
+    operate_get_findinfo_all(head);
+    printf("序号 \t\t物品 \t\t描述 \t\t状态\n");
+    printf("=====================================\n");
+    //这也是链表的遍历方式
+    int flag = 1;
+    FindNode *p = head;
+    while (p != NULL) {
+        //输出所有结果
+        if (equalsString(schoolId,p->fp.submit_user_schoolId)) {
+            printf("%3d \t\t%s \t\t%s \t\t",flag++,p->fp.name,p->fp.description);
+            if (p->fp.status == 0) {
+                printf("未领取");
+            } else if (p->fp.status == 1) {
+                printf("被领取");
+            } else {
+                printf("管理员不予显示，请修改");
+            }
+            printf("\n");
+        }
+        p = p->next;
+    }
+    flag--;
+    //如果没有对应的数据
+    if (flag == 0)
+    {
+        printf("未找到相关数据回车,返回上层\n");
+        freeFindNode(head);
+        getchar();
+        return NO;
+    } else
+    {
+        printf("共%d条信息\n",flag);
+    }
+    
+    int choice;
+    int status = putInt(&choice,"输入对应数字进行删除或输入0退出:");
+    while (!status || !(choice>=0&&choice<=flag)) {
+        status = putInt(&choice,"你的输入有误，请重写输入:");
+    }
+    if (choice == 0)
+    {
+        freeFindNode(head);
+        return NO;
+    }
+    printf("你要删除序号%d,",choice);
+    status = confirmInput();
+    if (!status)
+    {
+        freeFindNode(head);
+        return NO;
+    }
+    status = 0;
+    p = head;
+    FindNode *q = head;
+    while (p != NULL) {
+        if (equalsString(schoolId,p->fp.submit_user_schoolId)) {
+            status++;
+        }
+        if (status == choice) {
+            break;
+        }
+        q = p;  //记录下p的前一个节点
+        p = p->next;
+    }
+    if (q != p)
+    {
+        q->next = p->next; //删除节点p
+        p->next = NULL; //将p->next制空
+    } else {
+        p = head;
+        head = head->next;
+        p->next = NULL;
+    }
+    operate_remove_receiveinfo_by_type_id(2,p->fp.fid);
+    freeFindNode(p);    //释放节点p;
+    operate_update_findinfo_all(head);
+    printf("删除成功\n");
+    printf("输入回车返回上层\n");
+    getchar(); //用来暂停的
+    return OK;
+}
+
+Status client_user_homepage(char* schoolId,int *choice) {
+    //打印框框
+    show_user_homepage(schoolId);
+    //选择
+    getChoice(choice,0,3);
+    return OK;
+}
+
+Status client_user_update_password(char *schoolId) {
+    show_user_update_password(schoolId);
+    char password_old[200];
+    putString(password_old,"请输入你的密码,输入0返回上级:");
+    while (1) {
+        if (equalsString(password_old,"0")) {
+            return NO;
+        }
+        if (strlen(password_old) < 6)
+        {
+            putString(password_old,"密码至少有6位请重新输入,输入0返回上级:");
+            continue;
+        }
+        
+        if (operate_comfirm_login(schoolId,password_old) == OK) {
+            break;
+        } else {
+            putString(password_old,"密码错误请重新输入,输入0返回上级:");
+            continue;
+        }
+        
+    }
+    char password_new[200];
+    putString(password_new,"请输入你的新密码:");
+    while (strlen(password_new) < 6 ) {
+        putString(password_new,"密码至少有6位请重新输入:");
+    }
+    if (operate_update_userinfo_user_password(schoolId,password_new)){
+        printf("修改成功\n");
+    } else {
+        printf("修改失败出现异常\n");
+        return NO;
+    }
+    printf("输入回车返回上层");
+    getchar();
+    return OK;
+}
+

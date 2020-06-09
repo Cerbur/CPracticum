@@ -69,8 +69,14 @@ Status getTime(char *time_input);
 /**
  * 创建一个Lostinfo的链表
  */
-LostNode * new_LostNode(void);
+LostNode *new_LostNode(void);
+FindNode *new_FindNode(void);
+UserNode *new_UserNode(void);
+ReceiveNode *new_ReceiveNode(void);
 Status freeLostNode(LostNode *head);
+Status freeFindNode(FindNode *head);
+Status freeUserNode(UserNode *head);
+Status freeReceiveNode(ReceiveNode *head);
 void Next(char*T,int *next);
 int KMP(char*S,char*T);
 #endif

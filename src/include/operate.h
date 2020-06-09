@@ -35,6 +35,10 @@ Status operate_get_user_grade(char *schoolId);
  */ 
 Status operate_get_username_by_schoolId(char *username,char *schoolId);
 
+Status operate_update_userinfo_user_password(char *schoolId,char *password);
+
+Status operate_remove_receiveinfo_by_type_id(int type,int id);
+
 /**
  * 获取lostinfo表中的lid最大值
  */
@@ -56,11 +60,13 @@ Status operate_insert_findinfo(FindProperty fp);
 
 Status operate_get_lostinfo_all(LostNode *head);
 
+Status operate_get_findinfo_all(FindNode *head);
+
 Status operate_update_lostinfo_all(LostNode *head);
 
 Status operate_update_lostinfo_byId_status_to_1(int lid);
 
 Status operate_insert_receiverinfo_lost(char *login_schoolId,int lid);
 
-Status operate_get_lostinfo_by_keyword(LostNode *head,char *keyword);
+Status operate_update_findinfo_all(FindNode *head);
 #endif

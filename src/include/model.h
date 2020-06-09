@@ -39,6 +39,11 @@ typedef struct FindProperty
     int status; //状态 1-已经找回，0未领取
 } FindProperty;
 
+typedef struct FindNode
+{
+    FindProperty fp;
+    struct FindNode *next;
+} FindNode;
 
 /**
  * 用户信息的实体
@@ -51,4 +56,22 @@ typedef struct User
     int type; //用户类型 1-普通用户 2-管理员
 }User;
 
+typedef struct UserNode
+{
+    User user;
+    struct UserNode *next;
+} UserNode;
+
+typedef struct Receive {
+    int type;
+    int lfid;
+    String receive_user_schoolId;
+    String receive_time;
+} Receive;
+
+typedef struct ReceiveNode
+{
+    Receive r;
+    struct ReceiveNode *next;
+} ReceiveNode;
 #endif
