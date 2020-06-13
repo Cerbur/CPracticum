@@ -19,6 +19,7 @@ Status client_welcome(int *a) {
     return OK;
 }
 
+//登录模块 by 张远程 这里做了个特殊处理,选择注册会跳到case2
 Status client_user_login(char *session_login_Id){
     show_login();
     char schoolId[100];
@@ -55,7 +56,7 @@ Status client_user_exit(char *session_login_Id) {
     return OK;
 }
 
-
+//用户注册模块by 张远程
 Status client_registered(char *session_login_Id){
     show_register();
     int type = 2;
@@ -139,6 +140,7 @@ Status client_user_page(char *session_login_Id,int *choice) {
     return OK;
 }
 
+//发布信息到失物墙 by 冯浩轩
 Status client_post_lost_property(char *session_login_Id) {
     static char *card_name = "校园卡";
 
@@ -194,6 +196,7 @@ Status client_post_lost_property(char *session_login_Id) {
     return OK;
 }
 
+//发布信息到寻物墙 by 冯浩轩
 Status client_post_find_property(char* session_login_Id) {
     static char *card_name = "校园卡";
 
@@ -259,6 +262,8 @@ Status client_find_wall(char* schoolId,int *choice) {
     //选择
     getChoice(choice,0,2);
 }
+
+//失物关键词搜索并领取模块 by 莫振锋
 Status client_search_lost_all(char* schoolId) {
     //创建一个用来存所有lostinfo的链表头
     LostNode *head = new_LostNode();
@@ -344,6 +349,8 @@ Status client_search_lost_all(char* schoolId) {
     getchar(); //用来暂停的
     return OK;
 }
+
+//失物查看所有并领取模块 by 莫振锋
 Status client_get_lost_all(char* schoolId) {
     //创建一个用来存所有lostinfo的链表头
     LostNode *head = new_LostNode();
@@ -408,6 +415,7 @@ Status client_get_lost_all(char* schoolId) {
     return OK;
 }
 
+//寻物查看所有模块 by 莫振锋
 Status client_get_find_all(char* schoolId) {
     //创建一个用来存所有findinfo的链表头
     FindNode *head = new_FindNode();
@@ -440,6 +448,7 @@ Status client_get_find_all(char* schoolId) {
     return OK;
 }
 
+//寻物关键词搜索模块 by 莫振锋
 Status client_search_find_all(char* schoolId) {
 //创建一个用来存所有lostinfo的链表头
     FindNode *head = new_FindNode();
@@ -456,7 +465,7 @@ Status client_search_find_all(char* schoolId) {
     //这也是链表的遍历方式
     int flag = 1;   //用于确认总共有多少输出数据
     FindNode *p = head;
-    printf("序号 \t\t物品 \t\t描述\n");
+    printf("序号 \t\t物品 \t\t描述 \t\t联系方式\n");
     printf("=====================================\n");
     while (p != NULL) {
         //输出所有结果
@@ -485,6 +494,8 @@ Status client_search_find_all(char* schoolId) {
     getchar();
     return OK;
 }
+
+//用户删除发布的失物墙内容 by 张龙旺
 Status client_user_delete_lost_information(char *schoolId) {
     //创建一个用来存所有lostinfo的链表头
     LostNode *head = new_LostNode();
@@ -572,6 +583,7 @@ Status client_user_delete_lost_information(char *schoolId) {
 }
 
 
+//用户删除发布的寻物墙内容 by 张龙旺
 Status client_user_delete_find_information(char *schoolId) {
     //创建一个用来存所有lostinfo的链表头
     FindNode *head = new_FindNode();
@@ -666,6 +678,8 @@ Status client_user_homepage(char* schoolId,int *choice) {
     return OK;
 }
 
+
+//用户修改自己的密码 by 张子聪
 Status client_user_update_password(char *schoolId) {
     show_user_update_password(schoolId);
     char password_old[200];
@@ -704,6 +718,7 @@ Status client_user_update_password(char *schoolId) {
     return OK;
 }
 
+//用户查看自己领取的失物墙领取关系内容 by 张子聪
 Status client_user_show_lost(char *schoolId) {
     show_user_show_mylost(schoolId);
     ReceiveNode *p,*head_rec = new_ReceiveNode();
@@ -745,6 +760,7 @@ Status client_admin_homepage(char* schoolId,int *choice) {
     return OK;
 }
 
+//管理员限制发布的失物墙内容的展示 by 张龙旺
 Status client_admin_lost_wall(char* schoolId) {
     //创建一个用来存所有lostinfo的链表头
     LostNode *head = new_LostNode();
@@ -818,6 +834,7 @@ Status client_admin_lost_wall(char* schoolId) {
     return OK;
 }
 
+//管理员限制发布的寻物墙内容的展示 by 张龙旺
 Status client_admin_find_wall(char* schoolId) {
      //创建一个用来存所有lostinfo的链表头
     FindNode *head = new_FindNode();
@@ -889,6 +906,8 @@ Status client_admin_find_wall(char* schoolId) {
     return OK;
 }
 
+
+//管理员查看所有领取的失物墙领取关系内容 by 张子聪
 Status client_admin_receive_wall(char* schoolId) {
     ReceiveNode *p,*head_rec = new_ReceiveNode();
     LostNode *q,*head_lost = new_LostNode();
@@ -920,6 +939,8 @@ Status client_admin_receive_wall(char* schoolId) {
     getchar();
     return OK;
 }
+
+//管理员重置用户的密码 by 张子聪
 Status client_admin_reset_password(char* schoolId) {
     char schoolId_change[200];
     putString(schoolId_change,"请输入你要重置密码的学号,输入0返回上级:");
@@ -959,6 +980,8 @@ Status client_user_remind_look(char* schoolId) {
     freeLostNode(head);
     return NO;
 }
+
+//主动提醒模块 by 张远程
 Status client_user_remind_detail(char* schoolId) {
     //创建一个用来存所有lostinfo的链表头
     LostNode *head = new_LostNode();

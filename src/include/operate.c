@@ -177,7 +177,6 @@ Status operate_remove_receiveinfo_by_type_id(int type,int id) {
     p = head;
     while (p != NULL) {
         if (p->r.lfid == id && p->r.type == type ){
-            printf("id:%d删除",p->r.lfid);
             p = p->next;
             continue;
         }
@@ -219,7 +218,6 @@ Status operate_get_lostinfo_maxlid(int *lid) {
         char tmp3[100],tmp4[100],tmp5[100],tmp6[100],tmp7[100],tmp8[100];
         fscanf(flie_lostinfo,"%d %s %s %s %s %s %s %d\n",&tmp1,tmp3,tmp4,tmp5,tmp6,tmp7,tmp8,&tmp2);
     }
-    printf("%d",tmp1);
     *lid = ++tmp1;
     fclose(flie_lostinfo);
     return OK;
@@ -246,7 +244,6 @@ Status operate_get_lostinfo_maxfid(int *fid) {
         char tmp3[100],tmp4[100],tmp5[100],tmp6[100],tmp7[100],tmp8[100];
         fscanf(flie_findinfo,"%d %s %s %s %s %s %s %d\n",&tmp1,tmp3,tmp4,tmp5,tmp6,tmp7,tmp8,&tmp2);
     }
-    printf("%d",tmp1);
     *fid = ++tmp1;
     fclose(flie_findinfo);
     return OK;

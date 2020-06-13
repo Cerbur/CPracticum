@@ -35,9 +35,7 @@ Status client_exit();
 Status client_user_page(char *session_login_Id,int *choice);
 Status client_lost_wall(char* schoolId,int *choice);
 Status client_find_wall(char* schoolId,int *choice);
-/**
- * 发布失物
- */
+
 Status client_post_lost_property(char *session_login_Id);
 /**
  * 发布寻物
